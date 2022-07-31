@@ -8,7 +8,11 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+//責務分割によるリファクタリング
+//AddTaskServiceを使う
+
 type AddTask struct {
+	//ビジネスロジックと、永続化処理をインターフェースに移乗する。モックしやすい
 	Service   AddTaskService
 	Validator *validator.Validate
 }

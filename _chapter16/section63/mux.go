@@ -2,6 +2,7 @@ package main
 
 import "net/http"
 
+//ルーティングを分離。ルーティングのテストもできる
 func NewMux() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {

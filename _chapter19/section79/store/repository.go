@@ -13,6 +13,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//エラーコードを追加
 const (
 	// ErrCodeMySQLDuplicateEntry はMySQL系ののDUPLICATEエラーコード
 	// https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html

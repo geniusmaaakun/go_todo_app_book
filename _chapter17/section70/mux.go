@@ -9,6 +9,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+//ハンドラーにエンドポイントを追加
 func NewMux() http.Handler {
 	mux := chi.NewRouter()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {

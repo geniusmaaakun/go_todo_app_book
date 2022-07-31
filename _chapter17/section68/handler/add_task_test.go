@@ -17,6 +17,10 @@ func TestAddTask(t *testing.T) {
 		status  int
 		rspFile string
 	}
+	//ゴールデンテスト
+	//入力、期待値を別ファイルとして保存
+	//テーブルテスト
+	//rspFileでJSONデータをファイルから読み込み、サブテストとして実行
 	tests := map[string]struct {
 		reqFile string
 		want    want

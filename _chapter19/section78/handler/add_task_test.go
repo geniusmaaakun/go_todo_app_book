@@ -13,6 +13,8 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+//責務を分割したことでモックテストができるようになる
+
 func TestAddTask(t *testing.T) {
 	type want struct {
 		status  int
@@ -48,6 +50,7 @@ func TestAddTask(t *testing.T) {
 				"/tasks",
 				bytes.NewReader(testutil.LoadFile(t, tt.reqFile)),
 			)
+			//モックによって生成された型
 			moq := &AddTaskServiceMock{}
 			moq.AddTaskFunc = func(
 				ctx context.Context, title string,

@@ -11,6 +11,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+//テストしやすくなったので、リファクタリング
 func TestServer_Run(t *testing.T) {
 	l, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
@@ -18,11 +19,13 @@ func TestServer_Run(t *testing.T) {
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	eg, ctx := errgroup.WithContext(ctx)
+	//ハンドラ作成
 	mux := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
 	})
 
 	eg.Go(func() error {
+		//サーバーの作成と、起動
 		s := NewServer(l, mux)
 		return s.Run(ctx)
 	})

@@ -15,6 +15,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+//グレースフルシャットダウンの実装
+
 func main() {
 	if err := run(context.Background()); err != nil {
 		log.Printf("failed to terminated server: %v", err)
@@ -23,6 +25,7 @@ func main() {
 }
 
 func run(ctx context.Context) error {
+	//CTRL + Cを待つ
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	cfg, err := config.New()
@@ -57,6 +60,7 @@ func run(ctx context.Context) error {
 		return nil
 	})
 
+	//s.Shutdownでグレースフルシャットダウンが開始する
 	<-ctx.Done()
 	if err := s.Shutdown(context.Background()); err != nil {
 		log.Printf("failed to shutdown: %+v", err)

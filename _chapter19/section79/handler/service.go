@@ -15,6 +15,7 @@ type AddTaskService interface {
 	AddTask(ctx context.Context, title string) (*entity.Task, error)
 }
 
+//ユーザー登録機能のモックインターフェース
 type RegisterUserService interface {
 	RegisterUser(ctx context.Context, name, password, role string) (*entity.User, error)
 }

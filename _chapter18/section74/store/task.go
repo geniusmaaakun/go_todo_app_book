@@ -6,14 +6,18 @@ import (
 	"github.com/budougumi0617/go_todo_app/entity"
 )
 
+//DBに対する操作
+
 func (r *Repository) AddTask(
 	ctx context.Context, db Execer, t *entity.Task,
 ) error {
+	//時間設定
 	t.Created = r.Clocker.Now()
 	t.Modified = r.Clocker.Now()
 	sql := `INSERT INTO task
 		(title, status, created, modified)
 	VALUES (?, ?, ?, ?)`
+	//保存したidを取得できるresult
 	result, err := db.ExecContext(
 		ctx, sql, t.Title, t.Status,
 		t.Created, t.Modified,
@@ -25,6 +29,7 @@ func (r *Repository) AddTask(
 	if err != nil {
 		return err
 	}
+	//呼び出し元にIDを返す
 	t.ID = entity.TaskID(id)
 	return nil
 }
@@ -37,6 +42,7 @@ func (r *Repository) ListTasks(
 			id, title,
 			status, created, modified
 		FROM task;`
+	//複数行取得
 	if err := db.SelectContext(ctx, &tasks, sql); err != nil {
 		return nil, err
 	}

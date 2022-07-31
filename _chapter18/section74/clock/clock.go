@@ -8,12 +8,14 @@ type Clocker interface {
 	Now() time.Time
 }
 
+//本番用
 type RealClocker struct{}
 
 func (r RealClocker) Now() time.Time {
 	return time.Now()
 }
 
+//テスト用
 type FixedClocker struct{}
 
 func (fc FixedClocker) Now() time.Time {

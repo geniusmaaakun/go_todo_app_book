@@ -4,6 +4,7 @@ import (
 	"github.com/caarlos0/env/v6"
 )
 
+//mysqlの情報を設定
 type Config struct {
 	Env        string `env:"TODO_ENV" envDefault:"dev"`
 	Port       int    `env:"PORT" envDefault:"80"`

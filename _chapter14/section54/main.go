@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+//テストしにくいコード
 func main() {
 	err := http.ListenAndServe(
 		":18080",

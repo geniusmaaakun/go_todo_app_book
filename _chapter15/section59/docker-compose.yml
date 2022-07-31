@@ -4,6 +4,7 @@ services:
   app:
     image: gotodo
     build:
+      #ホットリロードの環境を指定
       args:
         - target=dev
     volumes:

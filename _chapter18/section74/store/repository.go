@@ -40,16 +40,23 @@ func New(ctx context.Context, cfg *config.Config) (*sqlx.DB, func(), error) {
 	// Openは実際に接続テストが行われない。
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
+	//pingで接続確認
 	if err := db.PingContext(ctx); err != nil {
 		return nil, func() { _ = db.Close() }, err
 	}
 	xdb := sqlx.NewDb(db, "mysql")
+	//close関数を返す。終了時にDBを閉じる必要がある
 	return xdb, func() { _ = db.Close() }, nil
 }
 
+//RDBに対する操作をする型
 type Repository struct {
+	//時間を制御するインターフェース
+	//テスト用と本番用の型を使い分ける。テストではns比較したくない為
 	Clocker clock.Clocker
 }
+
+//引数として渡す際に、インターフェースが使えるメソッドなどコードが分かりやすくなる
 
 type Beginner interface {
 	BeginTx(ctx context.Context, opts *sql.TxOptions) (*sql.Tx, error)

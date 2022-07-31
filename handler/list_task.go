@@ -10,6 +10,8 @@ type ListTask struct {
 	Service ListTasksService
 }
 
+//インメモリからRDBに変更
+
 type task struct {
 	ID     entity.TaskID     `json:"id"`
 	Title  string            `json:"title"`

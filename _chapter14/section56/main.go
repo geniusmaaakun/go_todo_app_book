@@ -16,6 +16,7 @@ func main() {
 		log.Printf("need port number\n")
 		os.Exit(1)
 	}
+	//ポート番号も渡せるようにする
 	p := os.Args[1]
 	l, err := net.Listen("tcp", ":"+p)
 	if err != nil {
@@ -38,6 +39,7 @@ func run(ctx context.Context, l net.Listener) error {
 	eg, ctx := errgroup.WithContext(ctx)
 	eg.Go(func() error {
 		// ListenAndServeメソッドではなく、Serveメソッドに変更する
+		//listenerを渡すことでポートが指定される
 		if err := s.Serve(l); err != nil &&
 			// http.ErrServerClosed は
 			// http.Server.Shutdown() が正常に終了したことを示すので異常ではない

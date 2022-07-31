@@ -11,6 +11,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+//サーバーポートを環境変数から取得するので、動的に指定できない為一旦スキップする
 func TestRun(t *testing.T) {
 	t.Skip("リファクタリング中")
 

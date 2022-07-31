@@ -7,6 +7,7 @@ import (
 
 func TestNew(t *testing.T) {
 	wantPort := 3333
+	//ポート設定
 	t.Setenv("PORT", fmt.Sprint(wantPort))
 
 	got, err := New()
@@ -16,6 +17,7 @@ func TestNew(t *testing.T) {
 	if got.Port != wantPort {
 		t.Errorf("want %d, but %d", wantPort, got.Port)
 	}
+	//初期値を設定している
 	wantEnv := "dev"
 	if got.Env != wantEnv {
 		t.Errorf("want %s, but %s", wantEnv, got.Env)

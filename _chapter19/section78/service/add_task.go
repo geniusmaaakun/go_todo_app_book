@@ -8,9 +8,12 @@ import (
 	"github.com/budougumi0617/go_todo_app/store"
 )
 
+//モックではなく実際のservice。
+//ハンドラーとは切り離されている
+
 type AddTask struct {
 	DB   store.Execer
-	Repo TaskAdder
+	Repo TaskAdder //インターフェースをDIする。モックできる
 }
 
 func (a *AddTask) AddTask(ctx context.Context, title string) (*entity.Task, error) {

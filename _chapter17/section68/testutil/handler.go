@@ -10,6 +10,9 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+//test用のヘルパー関数
+
+//jsonの同一性
 func AssertJSON(t *testing.T, want, got []byte) {
 	t.Helper()
 
@@ -20,10 +23,13 @@ func AssertJSON(t *testing.T, want, got []byte) {
 	if err := json.Unmarshal(got, &jg); err != nil {
 		t.Fatalf("cannot unmarshal got %q: %v", got, err)
 	}
+	//左分比較
 	if diff := cmp.Diff(jg, jw); diff != "" {
 		t.Errorf("got differs: (-got +want)\n%s", diff)
 	}
 }
+
+//レスポンスの同一性
 func AssertResponse(t *testing.T, got *http.Response, status int, body []byte) {
 	t.Helper()
 	t.Cleanup(func() { _ = got.Body.Close() })
@@ -43,6 +49,7 @@ func AssertResponse(t *testing.T, got *http.Response, status int, body []byte) {
 	AssertJSON(t, body, gb)
 }
 
+//入力値期待地をファイルから取得
 func LoadFile(t *testing.T, path string) []byte {
 	t.Helper()
 

@@ -9,7 +9,7 @@ import (
 )
 
 type ListTask struct {
-	DB   store.Queryer
+	DB   store.Queryer //参照型しか利用しないインターフェース
 	Repo TaskLister
 }
 

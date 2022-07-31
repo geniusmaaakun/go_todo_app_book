@@ -17,6 +17,7 @@ type Server struct {
 	l   net.Listener
 }
 
+//listenrとハンドラを受け取り設定。責務を分離しテストしやすくなる
 func NewServer(l net.Listener, mux http.Handler) *Server {
 	return &Server{
 		srv: &http.Server{Handler: mux},

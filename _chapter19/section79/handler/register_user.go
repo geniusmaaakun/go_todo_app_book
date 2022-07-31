@@ -13,6 +13,7 @@ type RegisterUser struct {
 	Validator *validator.Validate
 }
 
+//データを受け取りDBに保存
 func (ru *RegisterUser) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var b struct {

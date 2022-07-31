@@ -9,6 +9,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
+//DBに追加
 func (r *Repository) RegisterUser(ctx context.Context, db Execer, u *entity.User) error {
 	u.Created = r.Clocker.Now()
 	u.Modified = r.Clocker.Now()

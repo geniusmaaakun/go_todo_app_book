@@ -2,6 +2,8 @@ package entity
 
 import "time"
 
+//ユーザー登録機能の追加
+
 type UserID int64
 
 type User struct {

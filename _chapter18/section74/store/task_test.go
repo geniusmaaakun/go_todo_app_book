@@ -12,6 +12,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//RDBに関するテスト
+
 func prepareTasks(ctx context.Context, t *testing.T, con Execer) entity.Tasks {
 	t.Helper()
 	// 一度きれいにしておく
@@ -33,6 +35,8 @@ func prepareTasks(ctx context.Context, t *testing.T, con Execer) entity.Tasks {
 			Created: c.Now(), Modified: c.Now(),
 		},
 	}
+
+	//作成したデータ情報を作成し返す
 	result, err := con.ExecContext(ctx,
 		`INSERT INTO task (title, status, created, modified)
 			VALUES
@@ -56,8 +60,11 @@ func prepareTasks(ctx context.Context, t *testing.T, con Execer) entity.Tasks {
 	return wants
 }
 
+//実際のDBを使ったテスト
 func TestRepository_ListTasks(t *testing.T) {
 	ctx := context.Background()
+
+	//DBを作成
 	// entity.Taskを作成する他のテストケースと混ざるとテストがフェイルする。
 	// そのため、トランザクションをはることでこのテストケースの中だけのテーブル状態にする。
 	tx, err := testutil.OpenDBForTest(t).BeginTxx(ctx, nil)
@@ -66,6 +73,8 @@ func TestRepository_ListTasks(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	//データを入れ、期待結果を作成
 	wants := prepareTasks(ctx, t, tx)
 
 	sut := &Repository{}
@@ -78,6 +87,8 @@ func TestRepository_ListTasks(t *testing.T) {
 	}
 }
 
+//モックを使ったテスト
+//メソッドから発行されたSQLクエリを検証できる
 func TestRepository_AddTask(t *testing.T) {
 	t.Parallel()
 	ctx := context.Background()
@@ -97,13 +108,15 @@ func TestRepository_AddTask(t *testing.T) {
 	}
 	t.Cleanup(func() { db.Close() })
 	mock.ExpectExec(
-		// エスケープが必要
+		// モックに設定するクエリはエスケープが必要
+		//妥当性については検証されないことに注意
 		`INSERT INTO task \(title, status, created, modified\) VALUES \(\?, \?, \?, \?\)`,
 	).WithArgs(okTask.Title, okTask.Status, c.Now(), c.Now()).
 		WillReturnResult(sqlmock.NewResult(wantID, 1))
 
 	xdb := sqlx.NewDb(db, "mysql")
 	r := &Repository{Clocker: c}
+	//ここで発行されるクエリが同じかを検証される
 	if err := r.AddTask(ctx, xdb, okTask); err != nil {
 		t.Errorf("want no error, but got %v", err)
 	}

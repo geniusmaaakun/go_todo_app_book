@@ -1,3 +1,8 @@
+/* 
+mysql スキーマ定義
+マイグレーションツールを使う　sqldef
+conf.dはdocker用の設定ファイル
+*/
 CREATE TABLE `user`
 (
     `id`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ユーザーの識別子',

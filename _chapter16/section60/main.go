@@ -20,6 +20,7 @@ func main() {
 }
 
 func run(ctx context.Context) error {
+	//環境変数を使って起動するようにする
 	cfg, err := config.New()
 	if err != nil {
 		return err

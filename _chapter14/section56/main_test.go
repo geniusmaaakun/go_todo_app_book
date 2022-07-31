@@ -11,7 +11,11 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+//テストしやすいサーバーのテスト
+
 func TestRun(t *testing.T) {
+	//自動でポートを選択される
+	//listenerを受け取る
 	l, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
 		t.Fatalf("failed to listen port %v", err)
@@ -22,6 +26,7 @@ func TestRun(t *testing.T) {
 		return run(ctx, l)
 	})
 	in := "message"
+	//l.Addr().String()でURLを指定
 	url := fmt.Sprintf("http://%s/%s", l.Addr().String(), in)
 	// どんなポート番号でリッスンしているのか確認
 	t.Logf("try request to %q", url)
