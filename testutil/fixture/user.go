@@ -8,6 +8,8 @@ import (
 	"github.com/budougumi0617/go_todo_app/entity"
 )
 
+//テストユーザーを作成する関数
+
 func User(u *entity.User) *entity.User {
 	result := &entity.User{
 		ID:       entity.UserID(rand.Int()),

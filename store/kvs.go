@@ -10,6 +10,10 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+//Redisを扱う
+
+//init
+//configからポートなど呼び出す
 func NewKVS(ctx context.Context, cfg *config.Config) (*KVS, error) {
 	cli := redis.NewClient(&redis.Options{
 		Addr: fmt.Sprintf("%s:%d", cfg.RedisHost, cfg.RedisPort),

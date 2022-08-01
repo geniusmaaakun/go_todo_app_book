@@ -19,6 +19,7 @@ type RegisterUserService interface {
 	RegisterUser(ctx context.Context, name, password, role string) (*entity.User, error)
 }
 
+//追加
 type LoginService interface {
 	Login(ctx context.Context, name, pw string) (string, error)
 }

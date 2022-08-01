@@ -12,6 +12,8 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+//ログインテスト
+//本来は失敗メッセージは返すべきではない
 func TestLogin_ServeHTTP(t *testing.T) {
 	type moq struct {
 		token string

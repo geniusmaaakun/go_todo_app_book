@@ -20,6 +20,9 @@ const (
 	UserNameKey = "user_name"
 )
 
+//embedで埋め込み
+///シングルバイナリで配布できる。ビルドすると他にファイルを使わない
+
 //go:embed cert/secret.pem
 var rawPrivKey []byte
 
@@ -27,6 +30,7 @@ var rawPrivKey []byte
 var rawPubKey []byte
 
 type JWTer struct {
+	//ファイルから鍵を作成
 	PrivateKey, PublicKey jwk.Key
 	Store                 Store
 	Clocker               clock.Clocker
@@ -38,6 +42,7 @@ type Store interface {
 	Load(ctx context.Context, key string) (entity.UserID, error)
 }
 
+//鍵の初期化など
 func NewJWTer(s Store, c clock.Clocker) (*JWTer, error) {
 	j := &JWTer{Store: s}
 	privkey, err := parse(rawPrivKey)
@@ -62,7 +67,9 @@ func parse(rawKey []byte) (jwk.Key, error) {
 	return key, nil
 }
 
+//トークンを発行
 func (j *JWTer) GenerateToken(ctx context.Context, u entity.User) ([]byte, error) {
+	//ビルダーパターン
 	tok, err := jwt.NewBuilder().
 		JwtID(uuid.New().String()).
 		Issuer(`github.com/budougumi0617/go_todo_app`).
@@ -90,15 +97,21 @@ func (j *JWTer) GenerateToken(ctx context.Context, u entity.User) ([]byte, error
 	return signed, nil
 }
 
+//ヘッダーから取り出せる
+//リクエストからJWTを取得
 func (j *JWTer) GetToken(ctx context.Context, r *http.Request) (jwt.Token, error) {
+	//HTTPリクエストからJWTであるjwt.Tokenインターフェースを満たす型の値を取得できる
 	token, err := jwt.ParseRequest(
 		r,
+		//署名検証アルゴリズムと利用する鍵を指定
 		jwt.WithKey(jwa.RS256, j.PublicKey),
+		//　検証は無視
 		jwt.WithValidate(false),
 	)
 	if err != nil {
 		return nil, err
 	}
+	//時刻情報を検証
 	if err := jwt.Validate(token, jwt.WithClock(j.Clocker)); err != nil {
 		return nil, fmt.Errorf("GetToken: failed to validate token: %w", err)
 	}
@@ -112,6 +125,7 @@ func (j *JWTer) GetToken(ctx context.Context, r *http.Request) (jwt.Token, error
 type userIDKey struct{}
 type roleKey struct{}
 
+//ユーザー権限などを一度に設定するメソッド
 func (j *JWTer) FillContext(r *http.Request) (*http.Request, error) {
 	token, err := j.GetToken(r.Context(), r)
 	if err != nil {
@@ -128,6 +142,7 @@ func (j *JWTer) FillContext(r *http.Request) (*http.Request, error) {
 	return clone, nil
 }
 
+//アプリケーションコードで引数などでjwtを引き回すのは冗長なので、contextに入れる
 func SetUserID(ctx context.Context, uid entity.UserID) context.Context {
 	return context.WithValue(ctx, userIDKey{}, uid)
 }

@@ -9,11 +9,13 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+//Redisのテスト用
 func OpenRedisForTest(t *testing.T) *redis.Client {
 	t.Helper()
 
 	host := "127.0.0.1"
 	port := 36379
+	//github actions
 	if _, defined := os.LookupEnv("CI"); defined {
 		// https://docs.github.com/ja/actions/using-containerized-services/creating-redis-service-containers#configuring-the-runner-job
 		port = 6379

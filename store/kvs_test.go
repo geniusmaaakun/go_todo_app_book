@@ -10,6 +10,8 @@ import (
 	"github.com/budougumi0617/go_todo_app/testutil"
 )
 
+//redisのテストコード
+
 func TestKVS_Save(t *testing.T) {
 	t.Parallel()
 
@@ -19,6 +21,7 @@ func TestKVS_Save(t *testing.T) {
 	key := "TestKVS_Save"
 	uid := entity.UserID(1234)
 	ctx := context.Background()
+	//後始末　保存したデータを削除
 	t.Cleanup(func() {
 		cli.Del(ctx, key)
 	})
@@ -39,6 +42,7 @@ func TestKVS_Load(t *testing.T) {
 		key := "TestKVS_Load_ok"
 		uid := entity.UserID(1234)
 		ctx := context.Background()
+		//set後に取り出す
 		cli.Set(ctx, key, int64(uid), 30*time.Minute)
 		t.Cleanup(func() {
 			cli.Del(ctx, key)

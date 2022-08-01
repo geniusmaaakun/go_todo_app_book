@@ -89,6 +89,7 @@ func TestNewJWTer(t *testing.T) {
 	}
 }
 
+//トークン生成のテスト
 func TestJWTer_GenJWT(t *testing.T) {
 	ctx := context.Background()
 	wantID := entity.UserID(20)
@@ -113,9 +114,11 @@ func TestJWTer_GenJWT(t *testing.T) {
 	}
 }
 
+//トークン取得のテスト
 func TestJWTer_GetJWT(t *testing.T) {
 	t.Parallel()
 
+	//時刻固定
 	c := clock.FixedClocker{}
 	want, err := jwt.NewBuilder().
 		JwtID(uuid.New().String()).
@@ -133,6 +136,7 @@ func TestJWTer_GetJWT(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	//署名済みアクセストークンを用意
 	signed, err := jwt.Sign(want, jwt.WithKey(jwa.RS256, pkey))
 	if err != nil {
 		t.Fatal(err)
@@ -140,6 +144,7 @@ func TestJWTer_GetJWT(t *testing.T) {
 	userID := entity.UserID(20)
 
 	ctx := context.Background()
+	//モックを使って保存
 	moq := &StoreMock{}
 	moq.LoadFunc = func(ctx context.Context, key string) (entity.UserID, error) {
 		return userID, nil
@@ -149,12 +154,15 @@ func TestJWTer_GetJWT(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	//アクセストークンを使ったリクエストを作成
 	req := httptest.NewRequest(
 		http.MethodGet,
 		`https://github.com/budougumi0617`,
 		nil,
 	)
+	//ヘッダーに設定
 	req.Header.Set(`Authorization`, fmt.Sprintf(`Bearer %s`, signed))
+	//リクエストから取り出す
 	got, err := sut.GetToken(ctx, req)
 	if err != nil {
 		t.Fatalf("want no error, but got %v", err)
@@ -170,6 +178,7 @@ func (c FixedTomorrowClocker) Now() time.Time {
 	return clock.FixedClocker{}.Now().Add(24 * time.Hour)
 }
 
+//失敗ケース
 func TestJWTer_GetJWT_NG(t *testing.T) {
 	t.Parallel()
 

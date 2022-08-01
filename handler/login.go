@@ -31,6 +31,7 @@ func (l *Login) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}, http.StatusBadRequest)
 		return
 	}
+	//jwtを発行し返す
 	jwt, err := l.Service.Login(ctx, body.UserName, body.Password)
 	if err != nil {
 		RespondJSON(ctx, w, &ErrResponse{
